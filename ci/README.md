@@ -1,1 +1,1 @@
-test
+1. Install Jenkins in the cluster
