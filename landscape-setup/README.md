@@ -20,4 +20,15 @@ Note: Tiller not necessary from Helm 3.0, so some steps are ignored
 
 6. Port-forward to Jenkins master to access Jenkins
 > export POD_NAME=$(kubectl get pods --namespace ci -l "app.kubernetes.io/component=jenkins-master" -l "app.kubernetes.io/instance=helmed-jenkins" -o jsonpath="{.items[0].metadata.name}")
+
 > kubectl --namespace ci port-forward $POD_NAME 8080:8080
+
+7. GCE ingress does not support target url rewrite - i.e. when an ingress is setup based on `/path`, the backend service gets the request as `/path` and not just `/`. Example: If `/jenkins` is the path to a target service, the target service gets the path as as `/jenkins` and not just `/`. This is bad. https://github.com/kubernetes/ingress-gce/issues/109
+For that reason, disable `GCE Ingress` and enable `nginx Ingress`.
+> gcloud container clusters update mono-cluster-1 --update-addons HttpLoadBalancing=DISABLED
+
+8. Install nginx ingress controller
+> helm install --name nginx-ingress stable/nginx-ingress --set rbac.create=true --set controller.publishService.enabled=true
+
+9. If you want Jenkins to be accessible externally, so that github hooks can reach and trigger Jenkins jobs, then Jenkins instance has to be exposed - exposing it via an ingress is better (instead of exposing it with a load balancer especially for Jenkins instance. The idea is to use the same ingress for exposing additional services in the future).
+> kubectl apply -f ingress.yaml
