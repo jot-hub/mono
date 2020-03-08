@@ -1,6 +1,6 @@
 Source: https://cloud.google.com/solutions/jenkins-on-kubernetes-engine-tutorial/
 
-Note: Tiller not necessary from Helm 3.0, so some steps are ignored
+Note: Tiller not necessary from Helm 3.0, so some steps are ignored from the mentioned tutorial
 
 1. Create a Kubernetes cluster.
 > gcloud container clusters create mono-cluster-1   --machine-type n1-standard-2 --num-nodes 2 --cluster-version 1.15.8-gke.3
