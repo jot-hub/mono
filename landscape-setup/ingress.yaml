@@ -7,9 +7,10 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - http:
+  - host: mono-jenkins.com
+    http:
       paths:
-      - path: /ci
+      - path: /*
         backend:
           serviceName: helmed-jenkins
           servicePort: 8080
